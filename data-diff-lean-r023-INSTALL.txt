@@ -1,0 +1,32 @@
+# data-diff-lean-r023 安装
+
+Champion: rust-lean-r0.23 (Mach-O arm64)
+geo wall 1.281574s / geo tte 1.160322s / exact 6/6
+
+## Codex / Claude Code (~/.codex/skills)
+
+```bash
+cd /tmp
+tar -xzf data-diff-lean-r023-share-20261031.tgz
+# 或 unzip data-diff-lean-r023-share-20261031.zip
+mkdir -p ~/.codex/skills
+rm -rf ~/.codex/skills/data-diff-lean-r023
+mv data-diff-lean-r023 ~/.codex/skills/
+# 校验二进制
+shasum -a 256 ~/.codex/skills/data-diff-lean-r023/bin/lean_rs
+# 期望: 456b7bfc5749b73845adf80b4e07825783d26ed77d6bbd475f98e369343971ab
+```
+
+仅 Apple Silicon (arm64) macOS。非 arm64 请用 data-diff-lean-r12。
+
+## 用法摘要
+
+```bash
+ROOT="$HOME/.codex/skills/data-diff-lean-r023"
+# 写入 .secrets/side-a.env / side-b.env (mode 600)，勿回显密码
+python3 "$ROOT/tools/db_pair_probe.py" --env-a "$ROOT/.secrets/side-a.env" --env-b "$ROOT/.secrets/side-b.env"
+python3 "$ROOT/tools/db_to_r023.py" --env-a "$ROOT/.secrets/side-a.env" --env-b "$ROOT/.secrets/side-b.env" \
+  --table-a T --table-b T --pk id
+```
+
+读 doris_runs/db_r023_*/pair_summary.json。
